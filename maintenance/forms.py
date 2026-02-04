@@ -21,7 +21,7 @@ class MaintenanceForm(forms.ModelForm):
         }
 
     def clean_cost(self):
-        cost = self.cleaned_data('cost')
+        cost = self.cleaned_data.get('cost')
         if cost < 0:
             raise forms.ValidationError('Maintenance cost cannot be negative.')
         return cost
