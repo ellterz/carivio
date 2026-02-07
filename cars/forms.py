@@ -8,7 +8,11 @@ class CarForm(forms.ModelForm):
         model = Car
         fields = ['name', 'manufacturer', 'category', 'year', 'vin']
         labels = {
-            'vin': 'Vehicle Identification Number'
+            'vin': 'Vehicle Identification Number',
+            'car': 'Car name',
+            'manufacturer': 'Manufacturer',
+            'category': 'Category',
+            'year': 'Year of Manufacture',
         }
         help_texts = {
             'vin': 'Exactly 17 characters.',
@@ -22,6 +26,20 @@ class CarForm(forms.ModelForm):
                 'placeholder': 'e.g. 2021',
             })
         }
+        error_messages = {
+            'vin': {
+                'required': 'This field is required.',
+                'unique': 'This field is already in use.',
+                'max_length': 'This field should be exactly 17 characters.',
+            },
+            'year': {
+                'invalid': 'Enter a valid year.',
+            },
+            'name': {
+                'required': 'Please enter the car name.',
+            }
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

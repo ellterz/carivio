@@ -15,13 +15,12 @@ def validate_car_year(value):
 
 
 def validate_car_vin(value):
-    value = value.strip().upper()
 
-    if len(value) != 17:
+    if len(value.strip()) != 17:
         raise ValidationError(f"VIN must be exactly 17 characters long.")
 
     if not value.isalnum():
         raise ValidationError(f"VIN must contain only letters and numbers.")
 
-    if any(char in {'I', 'O', 'Q'} for char in value):
+    if any(char in {'I', 'O', 'Q'} for char in value.upper()):
         raise ValidationError(f"VIN cannot contains I, O, or Q characters.")
