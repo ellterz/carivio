@@ -1,0 +1,93 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <a class="page-link" href="{% url 'maintenance:list' %}">
+            ← Back to Maintenance
+        </a>
+    </div>
+
+
+    <div class="container form-wrap">
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="{{ form.car.id_for_label }}">
+                        {{ form.car.label }}
+                    </label>
+                    {{ form.car }}
+                    {% for error in form.car.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">
+                        {{ form.date.label }}
+                    </label>
+                    {{ form.date }}
+                    {% for error in form.date.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group form-wide">
+                    <label for="{{ form.description.id_for_label }}">
+                        {{ form.description.label }}
+                    </label>
+                    {{ form.description }}
+                    {% for error in form.description.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.cost.id_for_label }}">
+                        {{ form.cost.label }}
+                    </label>
+                    {{ form.cost }}
+                    {% if form.cost.help_text %}
+                        <div class="help-text">{{ form.cost.help_text }}</div>
+                    {% endif %}
+                    {% for error in form.cost.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Save Record
+                </button>
+                <a class="btn btn-outline-light"
+                   href="{% url 'maintenance:list' %}">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+{% endblock %}

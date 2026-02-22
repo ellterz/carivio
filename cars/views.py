@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 
-from cars.forms import CarForm
+from cars.forms import CarForm, ManufacturerForm, CategoryForm
 from cars.models import Car
 
 
@@ -59,7 +59,7 @@ def edit_car(request: HttpRequest, pk: int) -> HttpResponse:
         'page_title': f"Edit {car.name}",
     }
 
-    return render(request, 'cars:form.html', context)
+    return render(request, 'cars/form.html', context)
 
 def delete_car(request: HttpRequest, pk: int) -> HttpResponse:
     car = get_object_or_404(Car, pk=pk)
@@ -68,8 +68,39 @@ def delete_car(request: HttpRequest, pk: int) -> HttpResponse:
         car.delete()
         return redirect('cars:list')
     context = {
-        'car': car,
+        'object': car,
         'page_title': f"Delete {car.name}",
     }
 
     return render(request,'common/confirm_delete.html', context)
+
+def create_manufacturer(request: HttpRequest):
+    if request.method == 'POST':
+        form = ManufacturerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cars:add')
+    else:
+        form = ManufacturerForm()
+
+    context = {
+        'form': form,
+        'page_title': 'Add Manufacturer',
+    }
+
+    return render(request, 'cars/manufacturer_form.html', context)
+
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cars:add')
+    else:
+        form = CategoryForm()
+
+    context = {
+        'form': form,
+        'page_title': 'Add Category',
+    }
+    return render(request, 'cars/category_form.html', context)

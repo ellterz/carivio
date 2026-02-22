@@ -12,7 +12,7 @@ class Part(models.Model):
         decimal_places=2,
         validators=[validate_part_price],
     )
-    manufacturer = models.CharField(max_length=100, blank=True)
+    manufacturer = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = 'Part'

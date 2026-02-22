@@ -1,10 +1,42 @@
-<h2>{{ page_title }}</h2>
-<p>Are you sure you want to delete <strong>{{ car }}</strong>?</p>
+{% extends "common/base.html" %}
+{% load static %}
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'cars:detail' car.pk %}" class="btn btn-secondary">
-        Cancel
-    </a>
-</form>
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="cars-page">
+
+    <div class="container cars-header">
+        <h1 class="cars-title">{{ page_title }}</h1>
+    </div>
+
+    <div class="container">
+        <div class="form-card text-center">
+
+            <p class="mb-4">
+                Are you sure you want to delete
+                <strong>{{ object }}</strong>?
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-actions justify-content-center">
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Delete
+                    </button>
+                    <a href="{{ request.META.HTTP_REFERER }}"
+                       class="btn btn-outline-light">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</section>
+{% endblock %}

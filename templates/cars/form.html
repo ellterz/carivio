@@ -1,10 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "common/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+    <div class="container page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <a class="page-link" href="{% url 'cars:list' %}">← Back to Cars</a>
+    </div>
+
+    <div class="container form-wrap">
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Vehicle Model</label>
+                    {{ form.name }}
+                    {% if form.name.help_text %}
+                        <div class="help-text">{{ form.name.help_text }}</div>
+                    {% endif %}
+                    {% if form.name.errors %}
+                        <div class="field-error">{{ form.name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacturer.id_for_label }}">
+                        Vehicle Make
+                        <a class="small-link" href="{% url 'cars:manufacturer_add' %}">+ Add</a>
+                    </label>
+                    {{ form.manufacturer }}
+                    {% if form.manufacturer.help_text %}
+                        <div class="help-text">{{ form.manufacturer.help_text }}</div>
+                    {% endif %}
+                    {% if form.manufacturer.errors %}
+                        <div class="field-error">{{ form.manufacturer.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">
+                        Category
+                        <a class="small-link" href="{% url 'cars:add_category' %}" target="_blank" title="Add a new category">+ Add Category</a>
+                    </label>
+                    {{ form.category }}
+                    {% if form.category.help_text %}
+                        <div class="help-text">{{ form.category.help_text }}</div>
+                    {% endif %}
+                    {% if form.category.errors %}
+                        <div class="field-error">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.year.id_for_label }}">Year of Manufacture</label>
+                    {{ form.year }}
+                    {% if form.year.help_text %}
+                        <div class="help-text">{{ form.year.help_text }}</div>
+                    {% endif %}
+                    {% if form.year.errors %}
+                        <div class="field-error">{{ form.year.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group form-wide">
+                    <label for="{{ form.vin.id_for_label }}">Vehicle Identification Number</label>
+                    {{ form.vin }}
+                    {% if form.vin.help_text %}
+                        <div class="help-text">{{ form.vin.help_text }}</div>
+                    {% endif %}
+                    {% if form.vin.errors %}
+                        <div class="field-error">{{ form.vin.errors }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-outline-light" href="{% url 'cars:list' %}">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</section>
+{% endblock %}

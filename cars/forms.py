@@ -1,6 +1,7 @@
 from django import forms
+from django.forms import MultipleChoiceField
 
-from cars.models import Car
+from cars.models import Car, Manufacturer, Category
 
 
 class CarForm(forms.ModelForm):
@@ -9,13 +10,14 @@ class CarForm(forms.ModelForm):
         fields = ['name', 'manufacturer', 'category', 'year', 'vin']
         labels = {
             'vin': 'Vehicle Identification Number',
-            'car': 'Car name',
+            'name': 'Car name',
             'manufacturer': 'Manufacturer',
             'category': 'Category',
             'year': 'Year of Manufacture',
         }
         help_texts = {
-            'vin': 'Exactly 17 characters.',
+            'category': 'Select one or more categories. To create a new category click "+Add Category".',
+            'vin': '17 characters only',
             'year': 'Enter the car year.',
         }
         widgets = {
@@ -24,7 +26,8 @@ class CarForm(forms.ModelForm):
             }),
             'year': forms.NumberInput(attrs={
                 'placeholder': 'e.g. 2021',
-            })
+            }),
+            'category': forms.SelectMultiple(),
         }
         error_messages = {
             'vin': {
@@ -45,3 +48,19 @@ class CarForm(forms.ModelForm):
 
         if self.instance.pk:
             self.fields['vin'].disabled = True
+
+
+
+
+class ManufacturerForm(forms.ModelForm):
+    class Meta:
+        model = Manufacturer
+        fields = ['name', 'country']
+        labels = {
+            'name': 'Manufacturer Name',
+            'country': 'Country',
+        }
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'description']

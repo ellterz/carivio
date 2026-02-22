@@ -16,10 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from common import views as common_views
+from common.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name='home'),
     path('cars/', include('cars.urls', namespace='cars')),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('parts/', include('parts.urls', namespace='parts')),
 ]
+
+handler404 = common_views.custom_404

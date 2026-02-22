@@ -1,0 +1,158 @@
+.page {
+    min-height: 100vh;
+    padding: 24px 0 60px;
+    background: radial-gradient(circle at top, #2f3b63 0%, #1b223a 45%, #12162a 100%);
+    color: #e8edf7;
+}
+
+
+.page-topbar {
+    background: rgba(17, 24, 39, 0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 0;
+    margin-bottom: 22px;
+}
+
+.page-topbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-topbar__brand {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.page-topbar__links a {
+    color: #cbd5e1;
+    margin-left: 18px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.page-topbar__links a:hover {
+    color: #fff;
+}
+
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 600;
+    margin: 0;
+}
+
+.page-link {
+    color: #f0f4ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+
+.page-split {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 20px;
+}
+
+.page-list-panel, .page-detail-panel {
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+
+.panel-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+
+.car-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.car-list-item {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.car-list-item:last-child {
+    border-bottom: none;
+}
+
+.car-name {
+    font-weight: 600;
+}
+
+.car-sub {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.car-view {
+    font-size: 0.85rem;
+    color: #9dc0ff;
+    text-decoration: none;
+}
+
+
+.detail-block {
+    display: grid;
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.detail-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.pill {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 2px 4px 2px 0;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    font-size: 0.85rem;
+}
+
+.muted {
+    opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+    .page-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+.small-link {
+    font-size: 0.85rem;
+    margin-left: 8px;
+    color: #9dc0ff;
+    text-decoration: none;
+}
+
+.small-link:hover {
+    text-decoration: underline;
+}

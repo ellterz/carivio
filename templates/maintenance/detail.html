@@ -1,0 +1,60 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">Maintenance Details</h1>
+        <a class="page-link" href="{% url 'maintenance:list' %}">
+            ← Back to Maintenance
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="page-detail-panel">
+            <div class="detail-block">
+
+                <div class="detail-row">
+                    <span>Car</span>
+                    <strong>{{ record.car }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Date</span>
+                    <strong>{{ record.date }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Description</span>
+                    <strong>{{ record.description }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Cost</span>
+                    <strong>${{ record.cost }}</strong>
+                </div>
+
+                <div class="detail-actions">
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'maintenance:edit' record.pk %}">
+                        Edit
+                    </a>
+                    <a class="btn btn-sm btn-outline-danger"
+                       href="{% url 'maintenance:delete' record.pk %}">
+                        Delete
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

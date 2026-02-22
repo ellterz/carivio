@@ -1,10 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "common/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <a class="page-link" href="{% url 'parts:list' %}">← Back to Parts</a>
+    </div>
+
+    <div class="container form-wrap">
+        <form method="post" class="form-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Part Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="field-error">{{ form.name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacturer.id_for_label }}">Manufacturer</label>
+                    {{ form.manufacturer }}
+                    {% if form.manufacturer.errors %}
+                        <div class="field-error">{{ form.manufacturer.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.price.id_for_label }}">Price</label>
+                    {{ form.price }}
+                    {% if form.price.errors %}
+                        <div class="field-error">{{ form.price.errors }}</div>
+                    {% endif %}
+                    {% if form.price.help_text %}
+                        <div class="help-text">{{ form.price.help_text }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group form-wide">
+                    <label for="{{ form.car.id_for_label }}">Compatible Cars</label>
+                    {{ form.car }}
+                    {% if form.car.errors %}
+                        <div class="field-error">{{ form.car.errors }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-outline-light" href="{% url 'parts:list' %}">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+{% endblock %}

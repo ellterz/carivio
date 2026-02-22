@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "common/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Parts | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">Parts</h1>
+        <a class="page-link" href="{% url 'parts:add' %}">+ Add New Part</a>
+    </div>
+
+    <div class="container page-list-panel">
+        <div class="panel-title">All Parts</div>
+
+        <ul class="car-list">
+            {% for part in parts %}
+                <li class="car-list-item">
+                    <div class="car-name">{{ part.name }}</div>
+                    <div class="car-sub">
+                        {{ part.manufacturer|default:"-" }} · ${{ part.price }}
+                    </div>
+
+                    <div class="detail-actions mt-2">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="{% url 'parts:detail' part.pk %}">
+                            View
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-secondary"
+                           href="{% url 'parts:edit' part.pk %}">
+                            Edit
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-danger"
+                           href="{% url 'parts:delete' part.pk %}">
+                            Delete
+                        </a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="car-list-item">
+                    <span class="muted">No parts yet.</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</section>
+{% endblock %}

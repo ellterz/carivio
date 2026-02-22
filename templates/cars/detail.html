@@ -1,10 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "common/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}{{ car.name }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">{{ car.name }} Details</h1>
+        <a class="page-link" href="{% url 'cars:list' %}">← Back to Cars</a>
+    </div>
+
+    <div class="container page-split">
+
+        <div class="page-detail-panel">
+            <div class="panel-title">Car Info</div>
+            <div class="detail-block">
+
+                <div class="detail-row">
+                    <span>Name</span>
+                    <strong>{{ car.name }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Manufacturer</span>
+                    <strong>{{ car.manufacturer }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Year</span>
+                    <strong>{{ car.year }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>VIN</span>
+                    <strong class="mono">{{ car.vin }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Categories</span>
+                    <div>
+                        {% for category in car.category.all %}
+                            <span class="pill">{{ category.name }}</span>
+                        {% empty %}
+                            <span class="muted">None</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'cars:edit' car.pk %}">
+                        Edit Car
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-danger"
+                       href="{% url 'cars:delete' car.pk %}">
+                        Delete Car
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="page-detail-panel">
+            <div class="panel-title">Maintenance & Parts</div>
+
+            <div class="detail-block mb-3">
+                <div class="detail-row">
+                    <span>Maintenance Records</span>
+                    <a class="small-link"
+                       href="{% url 'maintenance:add' %}?car={{ car.pk }}">
+                        + Add
+                    </a>
+                </div>
+
+                {% if car.maintenance_records.all %}
+                    <ul class="car-list">
+                        {% for record in car.maintenance_records.all %}
+                            <li class="car-list-item">
+                                {{ record.date }} – {{ record.description }}
+                                (<strong>${{ record.formatted_cost }}</strong>)
+                                <a class="small-link"
+                                   href="{% url 'maintenance:detail' record.pk %}">
+                                    View
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="muted">No maintenance records yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="detail-block">
+                <div class="detail-row">
+                    <span>Parts</span>
+                    <a class="small-link"
+                       href="{% url 'parts:add' %}?car={{ car.pk }}">
+                        + Add
+                    </a>
+                </div>
+
+                {% if car.parts.all %}
+                    <ul class="car-list">
+                        {% for part in car.parts.all %}
+                            <li class="car-list-item">
+                                {{ part.name }}
+                                (<strong>${{ part.formatted_price }}</strong>)
+                                {% if part.manufacturer %}
+                                    - {{ part.manufacturer }}
+                                {% endif %}
+                                <a class="small-link"
+                                   href="{% url 'parts:detail' part.pk %}">
+                                    View
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="muted">No parts linked yet.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{% endblock %}

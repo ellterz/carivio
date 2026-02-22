@@ -8,8 +8,9 @@ from maintenance.models import MaintenanceRecord
 class MaintenanceForm(forms.ModelForm):
     class Meta:
         model = MaintenanceRecord
-        fields = ['date', 'description', 'cost']
+        fields = ['car', 'date', 'description', 'cost']
         widgets = {
+            'car': forms.Select(),
             'date': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={
                 'placeholder': 'Description of the maintenance work.'
@@ -38,7 +39,7 @@ class MaintenanceForm(forms.ModelForm):
 
     def clean_cost(self):
         cost = self.cleaned_data.get('cost')
-        if cost < 0:
+        if cost is not None and cost < 0:
             raise forms.ValidationError('Maintenance cost cannot be negative.')
         return cost
 

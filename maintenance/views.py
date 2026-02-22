@@ -20,7 +20,7 @@ def maintenance_detail(request: HttpRequest, pk: int) -> HttpResponse:
     record = get_object_or_404(MaintenanceRecord, pk=pk)
 
     context = {
-        'maintenance': record,
+        'record': record,
         'page_title': f'Maintenance Detail: {record.car}'
     }
     return render(request, 'maintenance/detail.html', context)
@@ -52,6 +52,7 @@ def maintenance_edit(request: HttpRequest, pk: int) -> HttpResponse:
         form = MaintenanceForm(instance=record)
     context = {
         'form': form,
+        'record': record,
         'page_title': 'Edit Maintenance Record',
     }
 
@@ -64,7 +65,7 @@ def maintenance_delete(request: HttpRequest, pk: int) -> HttpResponse:
         record.delete()
         return redirect('maintenance:list')
     context = {
-        'maintenance': record,
+        'object': record,
         'page_title': 'Delete Maintenance Record',
     }
 

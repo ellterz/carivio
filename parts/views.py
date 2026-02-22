@@ -62,7 +62,7 @@ def part_delete(request: HttpRequest, pk:int) -> HttpResponse:
         part.delete()
         return redirect('parts:list')
     context = {
-        'part': part,
+        'object': part,
         'page_title': 'Delete Part'
     }
     return render(request, 'common/confirm_delete.html', context)

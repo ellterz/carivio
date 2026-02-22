@@ -1,0 +1,66 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <a class="page-link" href="{% url 'parts:list' %}">
+            ← Back to Parts
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="page-detail-panel">
+            <div class="detail-block">
+
+                <div class="detail-row">
+                    <span>Name</span>
+                    <strong>{{ part.name }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Manufacturer</span>
+                    <strong>{{ part.manufacturer|default:"-" }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Price</span>
+                    <strong>${{ part.price }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Compatible Cars</span>
+                    <div>
+                        {% for car in part.car.all %}
+                            <span class="pill">{{ car.name }} ({{ car.year }})</span>
+                        {% empty %}
+                            <span class="muted">None</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{% url 'parts:edit' part.pk %}">
+                        Edit
+                    </a>
+                    <a class="btn btn-sm btn-outline-danger"
+                       href="{% url 'parts:delete' part.pk %}">
+                        Delete
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

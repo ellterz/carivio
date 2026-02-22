@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "common/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Maintenance Records | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">Maintenance Records</h1>
+        <a class="page-link" href="{% url 'maintenance:add' %}">
+            + Add New Record
+        </a>
+    </div>
+
+    <div class="container page-list-panel">
+        <div class="panel-title">All Records</div>
+
+        <ul class="car-list">
+            {% for record in maintenance %}
+                <li class="car-list-item">
+
+                    <div class="car-name">
+                        {{ record.car.name }}
+                    </div>
+
+                    <div class="car-sub">
+                        {{ record.date }} · {{ record.description|truncatewords:8 }}
+                    </div>
+
+                    <div class="car-sub">
+                        Cost: <strong>${{ record.formatted_cost }}</strong>
+                    </div>
+
+                    <div class="detail-actions mt-2">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="{% url 'maintenance:detail' record.pk %}">
+                            View
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-secondary"
+                           href="{% url 'maintenance:edit' record.pk %}">
+                            Edit
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-danger"
+                           href="{% url 'maintenance:delete' record.pk %}">
+                            Delete
+                        </a>
+                    </div>
+
+                </li>
+            {% empty %}
+                <li class="car-list-item">
+                    <span class="muted">
+                        No maintenance records added yet.
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</section>
+{% endblock %}
