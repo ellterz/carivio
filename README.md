@@ -148,15 +148,7 @@ python manage.py migrate
 
 ---
 
-### 5️⃣ Create Superuser (Optional)
-
-```bash
-python manage.py createsuperuser
-```
-
----
-
-### 6️⃣ Run Development Server
+### 5️⃣ Run Development Server
 
 ```bash
 python manage.py runserver
