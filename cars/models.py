@@ -1,6 +1,7 @@
 from django.db import models
 from cars.validators import validate_car_year, validate_car_vin
 from datetime import date
+from django.conf import settings
 
 # Create your models here.
 class Manufacturer(models.Model):
@@ -38,6 +39,11 @@ class Car(models.Model):
         max_length=17,
         unique=True,
         validators=[validate_car_vin]
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='cars',
     )
 
 

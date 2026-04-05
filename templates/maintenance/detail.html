@@ -38,19 +38,21 @@
 
                 <div class="detail-row">
                     <span>Cost</span>
-                    <strong>${{ record.cost }}</strong>
+                    <strong>${{ record.formatted_cost }}</strong>
                 </div>
 
-                <div class="detail-actions">
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="{% url 'maintenance:edit' record.pk %}">
-                        Edit
-                    </a>
-                    <a class="btn btn-sm btn-outline-danger"
-                       href="{% url 'maintenance:delete' record.pk %}">
-                        Delete
-                    </a>
-                </div>
+                {% if record.owner == user %}
+                    <div class="detail-actions">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="{% url 'maintenance:edit' record.pk %}">
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger"
+                           href="{% url 'maintenance:delete' record.pk %}">
+                            Delete
+                        </a>
+                    </div>
+                {% endif %}
 
             </div>
         </div>

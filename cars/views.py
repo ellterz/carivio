@@ -1,106 +1,104 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from cars.forms import CarForm, ManufacturerForm, CategoryForm
-from cars.models import Car
+from cars.models import Car, Category, Manufacturer
 
 
-# Create your views here.
-def cars_list(request: HttpRequest) -> HttpResponse:
-    cars = Car.objects.all()
+class CarListView(ListView):
+    model = Car
+    template_name = 'cars/list.html'
+    context_object_name = 'cars'
+    ordering = ['name']
 
-    context = {
-        'cars': cars,
-        'page_title': 'all_cars'
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'All Cars'
+        return context
+class MyCarListView(LoginRequiredMixin, ListView):
+    model = Car
+    template_name = 'cars/my_list.html'
+    context_object_name = 'cars'
 
-    return render(request, 'cars/list.html', context)
+    def get_queryset(self):
+        return Car.objects.filter(owner=self.request.user).order_by('name')
 
-def car_detail(request: HttpRequest, pk: int) -> HttpResponse:
-    car = get_object_or_404(Car, pk=pk)
+class CarDetailView(DetailView):
+    model = Car
+    template_name = 'cars/detail.html'
+    context_object_name = 'car'
 
-    context = {
-        'car': car,
-        'page_title': 'car_detail',
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f'{self.object.name} Details'
+        context['is_owner'] = self.request.user.is_authenticated and self.object.owner == self.request.user
+        return context
 
-    return render(request, 'cars/detail.html', context)
+class CarCreateView(LoginRequiredMixin, CreateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/form.html'
+    success_url = reverse_lazy('cars:list')
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
-def create_car(request: HttpRequest):
-    if request.method == 'POST':
-        form = CarForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('cars:list')
-    else:
-        form = CarForm()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Car'
+        return context
 
-    context = {
-        'form': form,
-        'page_title': 'Add Car',
-    }
-    return render(request, 'cars/form.html', context)
+class CarUpdateView(LoginRequiredMixin, UpdateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/form.html'
 
+    def get_queryset(self):
+        return Car.objects.filter(owner=self.request.user)
 
-def edit_car(request: HttpRequest, pk: int) -> HttpResponse:
-    car = get_object_or_404(Car, pk=pk)
-    if request.method == 'POST':
-        form = CarForm(request.POST, instance=car)
-        if form.is_valid():
-            form.save()
-            return redirect('cars:detail', pk=car.pk)
-    else:
-        form = CarForm(instance=car)
-    context = {
-        'form': form,
-        'car': car,
-        'page_title': f"Edit {car.name}",
-    }
+    def get_success_url(self):
+        return reverse_lazy('cars:detail', kwargs={'pk': self.object.pk})
 
-    return render(request, 'cars/form.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f"Edit {self.object.name}"
+        context['car'] = self.object
+        return context
 
-def delete_car(request: HttpRequest, pk: int) -> HttpResponse:
-    car = get_object_or_404(Car, pk=pk)
+class CarDeleteView(LoginRequiredMixin, DeleteView):
+    model = Car
+    template_name = 'common/confirm_delete.html'
+    success_url = reverse_lazy('cars:list')
+    context_object_name = 'object'
 
-    if request.method == 'POST':
-        car.delete()
-        return redirect('cars:list')
-    context = {
-        'object': car,
-        'page_title': f"Delete {car.name}",
-    }
+    def get_queryset(self):
+        return Car.objects.filter(owner=self.request.user)
 
-    return render(request,'common/confirm_delete.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f"Delete {self.object.name}"
+        context['cancel_url'] = reverse_lazy('cars:detail', kwargs={'pk': self.object.pk})
+        return context
 
-def create_manufacturer(request: HttpRequest):
-    if request.method == 'POST':
-        form = ManufacturerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('cars:add')
-    else:
-        form = ManufacturerForm()
+class ManufacturerCreateView(LoginRequiredMixin, CreateView):
+    model = Manufacturer
+    form_class = ManufacturerForm
+    template_name = 'cars/manufacturer_form.html'
+    success_url = reverse_lazy('cars:add')
 
-    context = {
-        'form': form,
-        'page_title': 'Add Manufacturer',
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Manufacturer'
+        return context
 
-    return render(request, 'cars/manufacturer_form.html', context)
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'cars/category_form.html'
+    success_url = reverse_lazy('cars:add')
 
-def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('cars:add')
-    else:
-        form = CategoryForm()
-
-    context = {
-        'form': form,
-        'page_title': 'Add Category',
-    }
-    return render(request, 'cars/category_form.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Category'
+        return context

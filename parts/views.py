@@ -1,68 +1,90 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from parts.forms import PartForm
 from parts.models import Part
 
 
-# Create your views here.
-def parts_list(request: HttpRequest) -> HttpResponse:
-    parts = Part.objects.all()
-    context = {
-        'parts': parts,
-        'page_title': 'All Parts'
-    }
+class PartListView(LoginRequiredMixin, ListView):
+    model = Part
+    template_name = 'parts/list.html'
+    context_object_name = 'parts'
 
-    return render(request, 'parts/list.html', context)
+    def get_queryset(self):
+        return Part.objects.filter(owner=self.request.user).prefetch_related('car').order_by('name')
 
-def part_detail(request:HttpRequest, pk:int) -> HttpResponse:
-    part = get_object_or_404(Part, pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'All Parts'
+        return context
 
-    context = {
-        'part': part,
-        'page_title': 'Part Details'
-    }
+class PartDetailView(LoginRequiredMixin, DetailView):
+    model = Part
+    template_name = 'parts/detail.html'
+    context_object_name = 'part'
 
-    return render(request, 'parts/detail.html', context)
-def part_add(request: HttpRequest):
-    if request.method == 'POST':
-        form = PartForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('parts:list')
-    else:
-        form = PartForm()
 
-    context = {
-        'form': form,
-        'page_title': 'Add Part'
-    }
+    def get_queryset(self):
+        return Part.objects.filter(owner=self.request.user).prefetch_related('car')
 
-    return render(request, 'parts/form.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Part Details'
+        return context
 
-def part_edit(request: HttpRequest, pk:int) -> HttpResponse:
-    part = get_object_or_404(Part, pk=pk)
-    if request.method == 'POST':
-        form = PartForm(request.POST, instance=part)
-        if form.is_valid():
-            form.save()
-            return redirect('parts:detail', pk=part.pk)
-    else:
-        form = PartForm(instance=part)
-    context = {
-        'form': form,
-        'page_title': 'Edit Part'
-    }
+class PartCreateView(LoginRequiredMixin, CreateView):
+    model = Part
+    form_class = PartForm
+    template_name = 'parts/form.html'
+    success_url = reverse_lazy('parts:list')
 
-    return render(request, 'parts/form.html', context)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
-def part_delete(request: HttpRequest, pk:int) -> HttpResponse:
-    part = get_object_or_404(Part, pk=pk)
-    if request.method == 'POST':
-        part.delete()
-        return redirect('parts:list')
-    context = {
-        'object': part,
-        'page_title': 'Delete Part'
-    }
-    return render(request, 'common/confirm_delete.html', context)
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Add Part'
+        return context
+
+class PartUpdateView(LoginRequiredMixin, UpdateView):
+    model = Part
+    form_class = PartForm
+    template_name = 'parts/form.html'
+
+    def get_queryset(self):
+        return Part.objects.filter(owner=self.request.user).prefetch_related('car')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('parts:detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Edit Part'
+        return context
+
+
+class PartDeleteView(LoginRequiredMixin, DeleteView):
+    model = Part
+    template_name = 'common/confirm_delete.html'
+    success_url = reverse_lazy('parts:list')
+    context_object_name = 'object'
+
+    def get_queryset(self):
+        return Part.objects.filter(owner=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Delete Part'
+        context['cancel_url'] = reverse_lazy('parts:detail', kwargs={'pk': self.object.pk})
+        return context

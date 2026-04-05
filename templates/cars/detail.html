@@ -1,5 +1,6 @@
 {% extends "common/base.html" %}
 {% load static %}
+{% load car_extras %}
 
 {% block title %}{{ car.name }} | Carivio{% endblock %}
 
@@ -33,12 +34,16 @@
 
                 <div class="detail-row">
                     <span>Year</span>
-                    <strong>{{ car.year }}</strong>
+                    <strong>{{ car.year }} — {{ car.year|car_age }}</strong>
                 </div>
 
                 <div class="detail-row">
                     <span>VIN</span>
-                    <strong class="mono">{{ car.vin }}</strong>
+                    {% if is_owner %}
+                        <strong class="mono">{{ car.vin }}</strong>
+                    {% else %}
+                        <strong class="mono">Hidden</strong>
+                    {% endif %}
                 </div>
 
                 <div class="detail-row">
@@ -52,17 +57,16 @@
                     </div>
                 </div>
 
-                <div class="detail-actions">
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="{% url 'cars:edit' car.pk %}">
-                        Edit Car
-                    </a>
-
-                    <a class="btn btn-sm btn-outline-danger"
-                       href="{% url 'cars:delete' car.pk %}">
-                        Delete Car
-                    </a>
-                </div>
+                {% if is_owner %}
+                    <div class="detail-actions">
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'cars:edit' car.pk %}">
+                            Edit Car
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'cars:delete' car.pk %}">
+                            Delete Car
+                        </a>
+                    </div>
+                {% endif %}
 
             </div>
         </div>
@@ -73,57 +77,65 @@
             <div class="detail-block mb-3">
                 <div class="detail-row">
                     <span>Maintenance Records</span>
-                    <a class="small-link"
-                       href="{% url 'maintenance:add' %}?car={{ car.pk }}">
-                        + Add
-                    </a>
+                    {% if is_owner %}
+                        <a class="small-link" href="{% url 'maintenance:add' %}?car={{ car.pk }}">
+                            + Add
+                        </a>
+                    {% endif %}
                 </div>
 
-                {% if car.maintenance_records.all %}
-                    <ul class="car-list">
-                        {% for record in car.maintenance_records.all %}
-                            <li class="car-list-item">
-                                {{ record.date }} – {{ record.description }}
-                                (<strong>${{ record.formatted_cost }}</strong>)
-                                <a class="small-link"
-                                   href="{% url 'maintenance:detail' record.pk %}">
-                                    View
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                {% if is_owner %}
+                    {% if car.maintenance_records.all %}
+                        <ul class="car-list">
+                            {% for record in car.maintenance_records.all %}
+                                <li class="car-list-item">
+                                    {{ record.date }} - {{ record.description }}
+                                    (<strong>${{ record.formatted_cost }}</strong>)
+                                    <a class="small-link" href="{% url 'maintenance:detail' record.pk %}">
+                                        View
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="muted">No maintenance records yet.</p>
+                    {% endif %}
                 {% else %}
-                    <p class="muted">No maintenance records yet.</p>
+                    <p class="muted">Maintenance history is visible only to the owner.</p>
                 {% endif %}
             </div>
 
             <div class="detail-block">
                 <div class="detail-row">
                     <span>Parts</span>
-                    <a class="small-link"
-                       href="{% url 'parts:add' %}?car={{ car.pk }}">
-                        + Add
-                    </a>
+                    {% if is_owner %}
+                        <a class="small-link" href="{% url 'parts:add' %}?car={{ car.pk }}">
+                            + Add
+                        </a>
+                    {% endif %}
                 </div>
 
-                {% if car.parts.all %}
-                    <ul class="car-list">
-                        {% for part in car.parts.all %}
-                            <li class="car-list-item">
-                                {{ part.name }}
-                                (<strong>${{ part.formatted_price }}</strong>)
-                                {% if part.manufacturer %}
-                                    - {{ part.manufacturer }}
-                                {% endif %}
-                                <a class="small-link"
-                                   href="{% url 'parts:detail' part.pk %}">
-                                    View
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                {% if is_owner %}
+                    {% if car.parts.all %}
+                        <ul class="car-list">
+                            {% for part in car.parts.all %}
+                                <li class="car-list-item">
+                                    {{ part.name }}
+                                    (<strong>${{ part.formatted_price }}</strong>)
+                                    {% if part.manufacturer %}
+                                        - {{ part.manufacturer }}
+                                    {% endif %}
+                                    <a class="small-link" href="{% url 'parts:detail' part.pk %}">
+                                        View
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="muted">No parts linked yet.</p>
+                    {% endif %}
                 {% else %}
-                    <p class="muted">No parts linked yet.</p>
+                    <p class="muted">Parts information is visible only to the owner.</p>
                 {% endif %}
             </div>
 

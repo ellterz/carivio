@@ -1,0 +1,83 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+
+    <div class="container page-header">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <a class="page-link" href="{% url 'accounts:profile_edit' %}">Edit Profile</a>
+    </div>
+
+    <div class="container">
+        <div class="page-detail-panel">
+            <div class="detail-block">
+
+                <div class="detail-row">
+                    <span>Username</span>
+                    <strong>{{ profile.username }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Avatar</span>
+                    <div>
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            <span class="muted">No avatar uploaded.</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <span>Email</span>
+                    <strong>{{ profile.email|default:"Not provided" }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Bio</span>
+                    <strong>{{ profile.bio|default:"No bio yet." }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Member since</span>
+                    <strong>{{ profile.date_joined|date:"d M Y" }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Cars</span>
+                    <strong>{{ car_count }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Maintenance Records</span>
+                    <strong>{{ maintenance_count }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Parts</span>
+                    <strong>{{ parts_count }}</strong>
+                </div>
+
+                <div class="detail-row">
+                    <span>Groups</span>
+                    <div>
+                        {% for group in profile.groups.all %}
+                            <span class="pill">{{ group.name }}</span>
+                        {% empty %}
+                            <span class="muted">No groups assigned.</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

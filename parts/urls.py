@@ -1,12 +1,12 @@
 from django.urls import path
-
-from parts.views import parts_list, part_detail, part_add, part_edit, part_delete
+from parts.views import PartListView, PartDetailView, PartCreateView, PartUpdateView, PartDeleteView
 
 app_name = 'parts'
+
 urlpatterns = [
-    path('', parts_list, name='list'),
-    path('add/', part_add, name='add'),
-    path('<int:pk>/', part_detail, name='detail'),
-    path('<int:pk>/edit/', part_edit, name='edit'),
-    path('<int:pk>/delete/', part_delete, name='delete'),
+    path('', PartListView.as_view(), name='list'),
+    path('<int:pk>/', PartDetailView.as_view(), name='detail'),
+    path('add/', PartCreateView.as_view(), name='add'),
+    path('<int:pk>/edit/', PartUpdateView.as_view(), name='edit'),
+    path('<int:pk>/delete/', PartDeleteView.as_view(), name='delete'),
 ]

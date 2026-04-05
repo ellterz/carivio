@@ -1,5 +1,5 @@
 from django import forms
-
+from cars.models import Car
 from parts.models import Part
 
 
@@ -40,3 +40,9 @@ class PartForm(forms.ModelForm):
         if price is not None and price < 0:
             raise forms.ValidationError('Price cannot be negative.')
         return price
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user is not None:
+            self.fields['car'].queryset = Car.objects.filter(owner=user).order_by('name')

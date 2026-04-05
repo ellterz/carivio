@@ -1,15 +1,12 @@
 from django.urls import path
-
-from maintenance.views import maintenance_list, maintenance_detail, maintenance_create, maintenance_edit, \
-    maintenance_delete
+from maintenance.views import MaintenanceListView, MaintenanceDetailView, MaintenanceCreateView, MaintenanceUpdateView, MaintenanceDeleteView
 
 app_name = 'maintenance'
 
 urlpatterns = [
-    path('', maintenance_list, name='list'),
-    path('<int:pk>/', maintenance_detail, name='detail'),
-    path('add/', maintenance_create, name='add'),
-    path('<int:pk>/edit/', maintenance_edit, name='edit'),
-    path('<int:pk>/delete/', maintenance_delete, name='delete'),
-
+    path('', MaintenanceListView.as_view(), name='list'),
+    path('<int:pk>/', MaintenanceDetailView.as_view(), name='detail'),
+    path('add/', MaintenanceCreateView.as_view(), name='add'),
+    path('<int:pk>/edit/', MaintenanceUpdateView.as_view(), name='edit'),
+    path('<int:pk>/delete/', MaintenanceDeleteView.as_view(), name='delete'),
 ]

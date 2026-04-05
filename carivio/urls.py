@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from common import views as common_views
 from common.views import home
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +27,13 @@ urlpatterns = [
     path('cars/', include('cars.urls', namespace='cars')),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('parts/', include('parts.urls', namespace='parts')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('api/', include('api.urls', namespace='api')),
 ]
 
 handler404 = common_views.custom_404
+handler500 = common_views.custom_500
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

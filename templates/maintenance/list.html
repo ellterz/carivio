@@ -42,15 +42,17 @@
                             View
                         </a>
 
-                        <a class="btn btn-sm btn-outline-secondary"
-                           href="{% url 'maintenance:edit' record.pk %}">
-                            Edit
-                        </a>
+                        {% if record.owner == user %}
+                            <a class="btn btn-sm btn-outline-secondary"
+                               href="{% url 'maintenance:edit' record.pk %}">
+                                Edit
+                            </a>
 
-                        <a class="btn btn-sm btn-outline-danger"
-                           href="{% url 'maintenance:delete' record.pk %}">
-                            Delete
-                        </a>
+                            <a class="btn btn-sm btn-outline-danger"
+                               href="{% url 'maintenance:delete' record.pk %}">
+                                Delete
+                            </a>
+                        {% endif %}
                     </div>
 
                 </li>

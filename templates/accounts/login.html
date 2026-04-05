@@ -1,0 +1,54 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Login | Carivio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="page">
+    <div class="auth-wrap">
+        <div class="auth-header">
+            <h1 class="auth-title">Welcome back, please login</h1>
+        </div>
+
+        <form method="post" class="form-card auth-card">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group auth-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a class="btn btn-outline-light" href="{% url 'home' %}">Cancel</a>
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            <a class="auth-link" href="{% url 'accounts:register' %}">Create an account</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

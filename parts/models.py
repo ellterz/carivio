@@ -1,6 +1,7 @@
 from django.db import models
 from cars.models import Car
 from parts.validators import validate_part_price
+from django.conf import settings
 
 
 # Create your models here.
@@ -13,6 +14,11 @@ class Part(models.Model):
         validators=[validate_part_price],
     )
     manufacturer = models.CharField(max_length=100)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='parts',
+    )
 
     class Meta:
         verbose_name = 'Part'

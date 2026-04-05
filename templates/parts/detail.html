@@ -33,7 +33,7 @@
 
                 <div class="detail-row">
                     <span>Price</span>
-                    <strong>${{ part.price }}</strong>
+                    <strong>${{ part.formatted_price }}</strong>
                 </div>
 
                 <div class="detail-row">
@@ -47,16 +47,18 @@
                     </div>
                 </div>
 
-                <div class="detail-actions">
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="{% url 'parts:edit' part.pk %}">
-                        Edit
-                    </a>
-                    <a class="btn btn-sm btn-outline-danger"
-                       href="{% url 'parts:delete' part.pk %}">
-                        Delete
-                    </a>
-                </div>
+                {% if part.owner == user %}
+                    <div class="detail-actions">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="{% url 'parts:edit' part.pk %}">
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger"
+                           href="{% url 'parts:delete' part.pk %}">
+                            Delete
+                        </a>
+                    </div>
+                {% endif %}
 
             </div>
         </div>

@@ -23,7 +23,7 @@
                 <li class="car-list-item">
                     <div class="car-name">{{ part.name }}</div>
                     <div class="car-sub">
-                        {{ part.manufacturer|default:"-" }} · ${{ part.price }}
+                        {{ part.manufacturer|default:"-" }} · ${{ part.formatted_price }}
                     </div>
 
                     <div class="detail-actions mt-2">
@@ -32,15 +32,17 @@
                             View
                         </a>
 
-                        <a class="btn btn-sm btn-outline-secondary"
-                           href="{% url 'parts:edit' part.pk %}">
-                            Edit
-                        </a>
+                        {% if part.owner == user %}
+                            <a class="btn btn-sm btn-outline-secondary"
+                               href="{% url 'parts:edit' part.pk %}">
+                                Edit
+                            </a>
 
-                        <a class="btn btn-sm btn-outline-danger"
-                           href="{% url 'parts:delete' part.pk %}">
-                            Delete
-                        </a>
+                            <a class="btn btn-sm btn-outline-danger"
+                               href="{% url 'parts:delete' part.pk %}">
+                                Delete
+                            </a>
+                        {% endif %}
                     </div>
                 </li>
             {% empty %}

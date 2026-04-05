@@ -4,8 +4,6 @@
 {% block title %}Carivio Home{% endblock %}
 
 {% block navbar %}
-
-
 {% endblock %}
 
 {% block extra_css %}
@@ -25,14 +23,26 @@
                 <span class="hero__icon">🚗</span>
                 View Cars
             </a>
-            <a class="btn btn-primary btn-lg hero__btn" href="{% url 'maintenance:list' %}">
-                <span class="hero__icon">🛠️</span>
-                Manage Maintenance
-            </a>
-            <a class="btn btn-primary btn-lg hero__btn" href="{% url 'parts:list' %}">
-                <span class="hero__icon">⚙️</span>
-                Browse Parts
-            </a>
+
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary btn-lg hero__btn" href="{% url 'maintenance:list' %}">
+                    <span class="hero__icon">🛠️</span>
+                    Manage Maintenance
+                </a>
+                <a class="btn btn-primary btn-lg hero__btn" href="{% url 'parts:list' %}">
+                    <span class="hero__icon">⚙️</span>
+                    Browse Parts
+                </a>
+            {% else %}
+                <a class="btn btn-primary btn-lg hero__btn" href="{% url 'accounts:login' %}">
+                    <span class="hero__icon">👤</span>
+                    Login
+                </a>
+                <a class="btn btn-primary btn-lg hero__btn" href="{% url 'accounts:register' %}">
+                    <span class="hero__icon">📝</span>
+                    Register
+                </a>
+            {% endif %}
         </div>
     </div>
 </section>

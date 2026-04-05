@@ -1,7 +1,6 @@
 from datetime import date
-
 from django import forms
-
+from cars.models import Car
 from maintenance.models import MaintenanceRecord
 
 
@@ -48,3 +47,12 @@ class MaintenanceForm(forms.ModelForm):
         if maintenance_date and maintenance_date > date.today():
             raise forms.ValidationError('Maintenance date cannot be in the future.')
         return maintenance_date
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user is not None:
+            self.fields['car'].queryset = Car.objects.filter(owner=user).order_by('name')
+
+        if self.instance.pk:
+            self.fields['car'].disabled = True

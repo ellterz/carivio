@@ -1,6 +1,4 @@
 from django import forms
-from django.forms import MultipleChoiceField
-
 from cars.models import Car, Manufacturer, Category
 
 
