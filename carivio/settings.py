@@ -154,3 +154,7 @@ CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://carivio2026-f3huawccggh7dgc5.swedencentral-01.azurewebsites.net',
+]
